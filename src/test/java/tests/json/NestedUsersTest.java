@@ -1,9 +1,10 @@
 package tests.json;
 
+import base.BaseTest;
+import clients.UsersClient;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import base.BaseTest;
 
 import java.util.List;
 
@@ -13,15 +14,12 @@ import static org.hamcrest.Matchers.*;
 
 public class NestedUsersTest extends BaseTest {
 
+    private final UsersClient usersClient = new UsersClient();
+
     @Test
     public void nestedFields_shouldBePresentAndValid() {
-        Response response =
-                given()
-                        .when()
-                        .get("/users")
-                        .then()
-                        .statusCode(200)
-                        .extract().response();
+        Response response = usersClient.getAllUsers();
+        response.then().statusCode(200);
 
         JsonPath jsonPath = response.jsonPath();
 
