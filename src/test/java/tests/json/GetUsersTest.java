@@ -1,7 +1,7 @@
 package tests.json;
 
 import org.testng.annotations.Test;
-import tests.base.BaseTest;
+import base.BaseTest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;

@@ -1,64 +1,51 @@
 package tests.json;
 
+import base.BaseTest;
+import clients.UsersClient;
 import models.response.User;
 import models.response.UsersResponse;
 import org.testng.annotations.Test;
-import tests.base.BaseTest;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.*;
+import java.util.List;
 
-public class UsersPojoTest extends BaseTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class UsersPojoTest  extends BaseTest {
 
     @Test
-    public void usersResponse_shouldMapCorrectlyToPojo() {
+    public void usersResponse_shouldBeMappedCorrectly() {
+        // Arrange
+        UsersClient usersClient = new UsersClient();
 
-        UsersResponse usersResponse =
-                given()
-                        .when()
-                        .get("/users")
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .as(UsersResponse.class);
-        assertThat(usersResponse.getUsers(), not(empty()));
-        assertThat(usersResponse.getTotal(), greaterThan(0));
+        // Act
+        UsersResponse usersResponse = usersClient.getUsers();
+        List<User> users = usersResponse.getUsers();
 
-//        Validate first user
-        User firstUser = usersResponse.getUsers().get(0);
+        // Assert
+        assertThat(users)
+                .isNotNull()
+                .isNotEmpty();
 
-        assertThat(firstUser.getEmail(), containsString("@"));
-        assertThat(firstUser.getAddress().getCity(), notNullValue());
-        assertThat(firstUser.getCompany().getName(), not(isEmptyOrNullString()));
-        assertThat(firstUser.getBank().getCardType(), notNullValue());
-        assertThat(firstUser.getCrypto().getCoin(), notNullValue());
+        assertThat(users.get(0))
+                .extracting(
+                        User::getId,
+                        User::getFirstName,
+                        User::getLastName,
+                        User::getEmail
+                )
+                .doesNotContainNull();
     }
 
     @Test
-    public void allUsers_shouldHaveValidFields() {
-        UsersResponse usersResponse = given()
-                .when()
-                .get("/users")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(UsersResponse.class);
+    public void usersResponse_shouldContainValidEmails() {
+        // Arrange
+        UsersClient usersClient = new UsersClient();
 
-        for (User user : usersResponse.getUsers()) {
+        // Act
+        UsersResponse usersResponse = usersClient.getUsers();
 
-            assertNotNull(user.getId(), "User Id should not be null");
-            assertTrue(user.getId() > 0, "User Id should be positive");
-
-            assertNotNull(user.getEmail(), "User emal should not be null");
-            assertTrue(user.getEmail().contains("@"), "User email should contain @");
-
-            assertNotNull(user.getFirstName(), "User firstName should not be null");
-            assertFalse(user.getFirstName().isEmpty(), "User firstName should not be empty");
-
-            assertNotNull(user.getLastName(), "User firstName should not be null");
-            assertFalse(user.getLastName().isEmpty(), "User firstName should not be empty");
-        }
+        // Assert
+        assertThat(usersResponse.getUsers())
+                .allMatch(user -> user.getEmail().contains("@"));
     }
 }

@@ -3,7 +3,7 @@ package tests.json;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import tests.base.BaseTest;
+import base.BaseTest;
 
 import java.util.List;
 

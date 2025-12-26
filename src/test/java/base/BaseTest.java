@@ -1,4 +1,4 @@
-package tests.base;
+package base;
 
 import framework.config.ConfigManager;
 import io.restassured.RestAssured;
