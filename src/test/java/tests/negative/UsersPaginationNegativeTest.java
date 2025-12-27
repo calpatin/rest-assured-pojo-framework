@@ -18,55 +18,54 @@ public class UsersPaginationNegativeTest extends BaseTest {
     @DataProvider(name = "invalidOrEdgePages")
     public Object[][] invalidOrEdgePages() {
         return new Object[][]{
-                // name, page, expectedSkip, expectEmptyUsers
-                {"negative page should fallback to first page", -1, 0, false},
-                {"huge page should return empty users list", 999999, null, true}
+                {"negative page -> fallback to first page", -1, 0, false},
+                {"huge page -> empty users list", 999999, null, true}
         };
     }
 
     @Test(dataProvider = "invalidOrEdgePages")
-    public void getUsers_withInvalidOrEdgePages_shouldBehaveAsExpected(
+    public void getUsers_withInvalidOrEdgePages_shouldRespectPaginationContract(
             String caseName,
             int page,
             Integer expectedSkip,
             boolean expectEmptyUsers
     ) {
+        // Act
         Response response = usersClient.getUsersByPage(page);
+
+        // Assert: status
         response.then().statusCode(200);
 
+        // Extract once
         Integer total = response.jsonPath().getObject("total", Integer.class);
         Integer limit = response.jsonPath().getObject("limit", Integer.class);
         Integer skip  = response.jsonPath().getObject("skip", Integer.class);
-        List<?> users  = response.jsonPath().getList("users");
+        List<?> users = response.jsonPath().getList("users");
 
-        // basic existence
-        assertThat(caseName + " -> total should exist", total, notNullValue());
-        assertThat(caseName + " -> limit should exist", limit, notNullValue());
-        assertThat(caseName + " -> skip should exist", skip, notNullValue());
-        assertThat(caseName + " -> users should exist", users, notNullValue());
+        // Assert: fields exist
+        assertThat(caseName + " -> total exists", total, notNullValue());
+        assertThat(caseName + " -> limit exists", limit, notNullValue());
+        assertThat(caseName + " -> skip exists", skip, notNullValue());
+        assertThat(caseName + " -> users exists", users, notNullValue());
 
-        // invariants (always)
-        assertThat(caseName + " -> total should be >= 0", total, greaterThanOrEqualTo(0));
-        assertThat(caseName + " -> limit should be >= 0", limit, greaterThanOrEqualTo(0));
-        assertThat(caseName + " -> skip should be >= 0", skip, greaterThanOrEqualTo(0));
+        // Assert: invariants
+        assertThat(caseName + " -> total >= 0", total, greaterThanOrEqualTo(0));
+        assertThat(caseName + " -> limit >= 0", limit, greaterThanOrEqualTo(0));
+        assertThat(caseName + " -> skip >= 0", skip, greaterThanOrEqualTo(0));
 
-        // optional skip assertion
+        // Assert: expected skip (only when relevant)
         if (expectedSkip != null) {
             assertThat(caseName + " -> skip", skip, is(expectedSkip));
         }
 
-        // users empty / not empty
+        // Assert: behavior
         if (expectEmptyUsers) {
-            assertThat(caseName + " -> users", users, is(empty()));
-
-            // if empty list, API may legitimately return limit=0 (as you saw)
-            assertThat(caseName + " -> limit should be 0 when users is empty", limit, is(0));
+            assertThat(caseName + " -> users empty", users, is(empty()));
+            assertThat(caseName + " -> limit == 0 when users empty", limit, is(0));
         } else {
-            assertThat(caseName + " -> users", users, not(empty()));
-
-            // if not empty, limit must be > 0
-            assertThat(caseName + " -> limit should be > 0 when users is not empty", limit, greaterThan(0));
-            assertThat(caseName + " -> total should be > 0 when users is not empty", total, greaterThan(0));
+            assertThat(caseName + " -> users not empty", users, not(empty()));
+            assertThat(caseName + " -> limit > 0 when users not empty", limit, greaterThan(0));
+            assertThat(caseName + " -> total > 0 when users not empty", total, greaterThan(0));
         }
     }
 }
