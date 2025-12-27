@@ -153,10 +153,89 @@ This framework is designed to help you learn:
 
 ---
 
-## Disclaimer
+## Disclaimer# REST Assured API Testing Framework
 
-This project is intended for **learning and practice purposes** and uses a public dummy API.
+This project is a **Java-based API testing framework** built with **Rest Assured** and **TestNG**.  
+It is designed to be **clean, extensible, and easy to understand**, even for external users who are not familiar with the internal codebase.
+
+Target API: **https://dummyjson.com**
 
 ---
 
-Happy testing 🚀
+## 🎯 Framework Goals
+
+- Clear separation between:
+    - infrastructure
+    - API clients
+    - request / response models
+    - test logic
+- Support for:
+    - happy flow tests
+    - negative tests
+    - data-driven tests
+    - parallel execution
+- Centralized configuration
+- Easy onboarding for new contributors
+
+---
+
+## 🧱 Project Structure
+src
+├── main
+│ └── java
+│ ├── framework.config
+│ │ └── ConfigManager
+│ │
+│ └── models
+│ ├── request
+│ │ └── CreateUserRequest
+│ ├── response
+│ │ ├── CreateUserResponse
+│ │ ├── User
+│ │ └── UsersResponse
+│ └── common
+│ ├── Address
+│ ├── Bank
+│ ├── Company
+│ └── Crypto
+│
+└── test
+└── java
+├── framework.setup
+│ └── TestSuiteSetup
+│
+├── base
+│ ├── BaseApiClient
+│ └── BaseTest
+│
+├── clients
+│ └── UsersClient
+│
+└── tests
+├── json (GET tests)
+├── post (POST happy flow)
+└── negative (negative tests)
+
+
+The entire framework execution is orchestrated via testng.xml.
+
+Running the Tests
+Run the full test suite
+mvn test -Dsurefire.suiteXmlFiles=testng.xml
+
+Run only GET tests
+mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dgroups=get
+
+Run only POST tests
+mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dgroups=post
+
+Run only negative tests
+mvn test -Dsurefire.suiteXmlFiles=testng.xml -Dgroups=negative
+
+Design Principles
+
+Tests do not know HTTP details
+API clients do not contain assertions
+Global setup is explicit and centralized
+Parallel execution is safe and controlled
+Code is written for maintainability

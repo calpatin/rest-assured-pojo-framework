@@ -12,7 +12,7 @@ import static org.testng.Assert.*;
 
 public class ExtractUsersTest extends BaseTest {
 
-    @Test
+    @Test(groups = {"get", "happy"})
     public void extractEmails_shouldReturnValidEmails() {
 //    Arrange
         UsersClient usersClient = new UsersClient();

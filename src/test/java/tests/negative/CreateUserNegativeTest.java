@@ -10,7 +10,7 @@ public class CreateUserNegativeTest extends BaseTest {
 
     private final UsersClient usersClient = new UsersClient();
 
-    @Test
+    @Test(groups = {"negative"})
     public void createUser_onInvalidEndpoint_shouldReturn404() {
         Response response = usersClient.createUserOnInvalidEndpoint();
         response.then().statusCode(404);

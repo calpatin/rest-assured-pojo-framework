@@ -16,7 +16,7 @@ public class NestedUsersTest extends BaseTest {
 
     private final UsersClient usersClient = new UsersClient();
 
-    @Test
+    @Test(groups = {"get", "happy"})
     public void nestedFields_shouldBePresentAndValid() {
         Response response = usersClient.getAllUsers();
         response.then().statusCode(200);

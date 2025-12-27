@@ -12,7 +12,7 @@ public class UsersNegativeTest extends BaseTest {
 
     private final UsersClient usersClient = new UsersClient();
 
-    @Test
+    @Test(groups = {"negative"})
     public void getUserByInvalidId_shouldReturn404() {
 
         Response response = usersClient.getUsersById(99999999);
@@ -25,7 +25,7 @@ public class UsersNegativeTest extends BaseTest {
 
     }
 
-    @Test
+    @Test(groups = {"negative"})
     public void getUsersWithNegativePage_shouldFallbackToDefaultPage() {
         // Act
         Response response = usersClient.getUsersByPage(-1);
@@ -37,7 +37,7 @@ public class UsersNegativeTest extends BaseTest {
         assertThat(response.jsonPath().getInt("skip"), is(0));
     }
 
-    @Test
+    @Test(groups = {"negative"})
     public void getUsers_withVeryLargePage_shouldReturnEmptyUsersList() {
         UsersClient client = new UsersClient();
 

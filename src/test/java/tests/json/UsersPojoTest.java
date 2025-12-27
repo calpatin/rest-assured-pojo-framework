@@ -15,7 +15,7 @@ public class UsersPojoTest extends BaseTest {
 
     private final UsersClient usersClient = new UsersClient();
 
-    @Test
+    @Test(groups = {"get", "happy"})
     public void usersResponse_shouldBeMappedCorrectly() {
 
         // Act

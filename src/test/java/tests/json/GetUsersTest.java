@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.*;
 
 public class GetUsersTest extends BaseTest {
 
-    @Test
+    @Test(groups = {"get", "happy"})
     public void getUsers_shouldReturnValidUsersList() {
 
         UsersClient usersClient = new UsersClient();

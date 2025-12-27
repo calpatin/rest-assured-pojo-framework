@@ -14,7 +14,7 @@ public class CreateUserHappyFlowTest extends BaseTest {
 
     private final UsersClient usersClient = new UsersClient();
 
-    @Test
+    @Test(groups = {"post", "happy"})
     public void createUser_shouldReturnCreatedUser() {
 
         CreateUserRequest userRequest = new CreateUserRequest("Catalin",

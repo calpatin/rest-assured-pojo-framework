@@ -1,15 +1,13 @@
 package base;
 
-import framework.config.ConfigManager;
-import io.restassured.RestAssured;
-import org.testng.annotations.BeforeClass;
-
 public abstract class BaseTest {
 
-    @BeforeClass
-    public void setup() {
-        RestAssured.baseURI = ConfigManager.getBaseUrl();
+    // Helper class for future extension
+    protected String randomEmail() {
+        return "user_" + System.currentTimeMillis() + "@test.com";
+    }
 
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    protected int randomAge() {
+        return 18 + (int) (Math.random() * 40);
     }
 }
